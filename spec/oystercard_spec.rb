@@ -3,6 +3,7 @@ require "oystercard"
 describe Oystercard do
   let(:station){ double :station }
   let(:exit_station){double :exit_station}
+  let(:journey){ [{entry_station: station, exit_station: exit_station}] }
 
   it 'starts with a balance of 0' do
     expect(subject.balance).to eq 0
@@ -82,7 +83,7 @@ describe Oystercard do
       subject.top_up(10)
       subject.touch_in(station)
       subject.touch_out(exit_station)
-      expect(subject.journeys).to eq [{station: exit_station}]
+      expect(subject.journeys).to eq journey
     end
   end
 end

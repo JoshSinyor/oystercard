@@ -6,7 +6,7 @@ describe Oystercard do
     expect(subject.balance).to eq 0
   end
 
-  describe 'top up' do
+  describe '#top up' do
     it 'checks if the oystercard responds to the top_up method' do
       expect(subject).to respond_to(:top_up).with(1).argument
     end
@@ -22,24 +22,24 @@ describe Oystercard do
     end
   end
 
-  describe 'deduct' do
-    it 'checks if the oystercard responds to the deduct method' do
-      expect(subject).to respond_to(:deduct).with(1).argument
-    end
+  describe '#deduct' do
+    # it 'checks if the oystercard responds to the deduct method' do
+    #   expect(subject).to respond_to(:deduct).with(1).argument
+    # end
 
     it 'deducts money from balance' do
       subject.top_up(20)
-      expect{ subject.deduct(20) }.to change{ subject.balance }.by -20
+      expect{ subject.send(:deduct, 20) }.to change{ subject.balance }.by -20
     end
   end
 
-  describe 'in_journey?' do
+  describe '#in_journey?' do
     it 'starts off not in journey' do
       expect(subject).not_to be_in_journey
     end
   end
 
-  describe 'touch_in' do
+  describe '#touch_in' do
     it 'tells us that the card is in journey' do
       subject.top_up(10)
       subject.touch_in
@@ -48,16 +48,22 @@ describe Oystercard do
 
     it 'raises an error when the user has insufficient funds' do
       expect(subject.balance).to eq 0
-      expect { subject.touch_in }.to raise_error "Insufficient funds" 
+      expect { subject.touch_in }.to raise_error "Insufficient funds"
     end
   end
 
-  describe 'touch_out' do
+  describe '#touch_out' do
     it 'tells us that the card is not in journey' do
       subject.top_up(10)
       subject.touch_in
       subject.touch_out
       expect(subject).not_to be_in_journey
+    end
+
+    it 'will deduct the cost of the journey' do
+      subject.top_up(10)
+      subject.touch_in
+      expect { subject.touch_out }.to change{ subject.balance }.by -1
     end
   end
 end

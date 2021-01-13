@@ -1,9 +1,9 @@
 require 'oystercard'
 
 describe Oystercard do
-  let(:station){ double :station }
+  let(:entry_station){ double :entry_station }
   let(:exit_station){double :exit_station}
-  let(:journey){ [{entry_station: station, exit_station: exit_station}] }
+  let(:journey){ [{entry_station: entry_station, exit_station: exit_station}] }
 
   it 'starts with a balance of 0' do
     expect(subject.balance).to eq 0
@@ -41,27 +41,27 @@ describe Oystercard do
   describe '#touch_in' do
     it 'tells us that the card is in journey' do
       subject.top_up(10)
-      subject.touch_in(station)
+      subject.touch_in(entry_station)
       expect(subject).to be_in_journey
     end
 
     it 'raises an error when the user has insufficient funds' do
       expect(subject.balance).to eq 0
-      expect { subject.touch_in(station) }.to raise_error "Insufficient funds"
+      expect { subject.touch_in(entry_station) }.to raise_error "Insufficient funds"
     end
   end
 
   describe '#touch_out' do
     it 'tells us that the card is not in journey' do
       subject.top_up(10)
-      subject.touch_in(station)
+      subject.touch_in(entry_station)
       subject.touch_out(exit_station)
       expect(subject).not_to be_in_journey
     end
 
     it 'will deduct the cost of the journey' do
       subject.top_up(10)
-      subject.touch_in(station)
+      subject.touch_in(entry_station)
       expect { subject.touch_out(exit_station) }.to change{ subject.balance }.by (-Oystercard::DEFAULT_MINIMUM)
     end
   end
@@ -69,8 +69,8 @@ describe Oystercard do
   describe '#entry_station' do
     it 'stores the entry station' do
       subject.top_up(10)
-      subject.touch_in(station)
-      expect(subject.entry_station).to eq station
+      subject.touch_in(entry_station)
+      expect(subject.entry_station).to eq entry_station
     end
   end
 
@@ -81,7 +81,7 @@ describe Oystercard do
 
     it 'expects a journey to be stored' do
       subject.top_up(10)
-      subject.touch_in(station)
+      subject.touch_in(entry_station)
       subject.touch_out(exit_station)
       expect(subject.journeys).to eq journey
     end

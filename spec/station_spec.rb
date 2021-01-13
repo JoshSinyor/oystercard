@@ -12,7 +12,6 @@ describe Station do
     it 'has a zone' do
       expect(subject.zone).to eq 3
     end
-
   end
 
 end

@@ -2,9 +2,9 @@ require 'oystercard'
 
 describe Oystercard do
   let(:entry_station){ double :entry_station }
-  let(:exit_station){double :exit_station}
+  let(:exit_station){ double :exit_station }
   let(:journey_history){ [{entry_station: entry_station, exit_station: exit_station}] }
-=begin
+
   it 'starts with a balance of 0' do
     expect(subject.balance).to eq 0
   end
@@ -26,7 +26,7 @@ describe Oystercard do
 
   describe '#deduct' do
     it 'deducts money from balance' do
-      subject.top_up(20)
+      subject.top_up(Oystercard::DEFAULT_MAXIMUM_CARD_VALUE)
       expect{ subject.send(:deduct, 20) }.to change{ subject.balance }.by -20
     end
   end
@@ -37,40 +37,32 @@ describe Oystercard do
     end
   end
 
-  describe '#touch_in' do
-    # it 'tells us that the card is in journey' do
-    #  subject.top_up(10)
-    #  subject.touch_in(entry_station)
-    #  expect(subject).to be_in_journey
-    # end
+  describe 'touch_in' do
+    it 'tells us that the card is in journey' do
+      subject.top_up(Oystercard::DEFAULT_MAXIMUM_CARD_VALUE)
+      subject.touch_in(entry_station)
+      expect(subject).to be_in_journey
+    end
 
     it 'raises an error when the user has insufficient funds' do
       expect(subject.balance).to eq 0
-      expect { subject.touch_in(entry_station) }.to raise_error "Insufficient funds."
+      expect { subject.touch_in(:entry_station) }.to raise_error "Insufficient funds."
     end
   end
 
-  describe '#touch_out' do
+  describe 'touch_out' do
     it 'tells us that the card is not in journey' do
-      subject.top_up(10)
+      subject.top_up(Oystercard::DEFAULT_MAXIMUM_CARD_VALUE)
       subject.touch_in(entry_station)
       subject.touch_out(exit_station)
       expect(subject).not_to be_in_journey
     end
 
-    # it 'will deduct the cost of the journey' do
-    #  subject.top_up(10)
-    #  subject.touch_in(entry_station)
-    #  expect { subject.touch_out(exit_station) }.to change{ subject.balance }.by (-Oystercard::DEFAULT_MINIMUM_CARD_VALUE)
-    # end
-  end
-
-  describe '#entry_station' do
-  #  it 'stores the entry station' do
-  #    subject.top_up(10)
-  #    subject.touch_in(entry_station)
-  #    expect(subject.entry_station).to eq entry_station
-  #  end
+    it 'will deduct the cost of the journey' do
+      subject.top_up(Oystercard::DEFAULT_MAXIMUM_CARD_VALUE)
+      subject.touch_in(:entry_station)
+      expect { subject.touch_out(:exit_station) }.to change{ subject.balance }.by (-Journey::MINIMUM_FARE)
+    end
   end
 
   describe '#journey_history' do
@@ -78,12 +70,11 @@ describe Oystercard do
       expect(subject.journey_history).to eq []
     end
 
-    #it 'expects a journey to be stored' do
-    #  subject.top_up(10)
-    #  subject.touch_in(entry_station)
-    #  subject.touch_out(exit_station)
-    #  expect(subject.journey_history).to eq journey
-    #end
+    it 'expects a journey to be stored' do
+      subject.top_up(Oystercard::DEFAULT_MAXIMUM_CARD_VALUE)
+      subject.touch_in(:entry_station)
+      subject.touch_out(:exit_station)
+      expect(subject.journey_history).not_to be_empty
+    end
   end
-=end
 end

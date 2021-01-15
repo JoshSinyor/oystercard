@@ -31,18 +31,18 @@ class Oystercard
   end
 
   def in_journey?
-    @journey.nil?
+    !@journey.nil?
   end
 
   private
 
   def complete_journey
-    deduct
+    deduct(@journey.fare)
     @journey_history.push(@journey)
     @journey = nil
   end
 
-  def deduct
-    @balance -= @journey.fare
+  def deduct(fare)
+    @balance -= fare
   end
 end

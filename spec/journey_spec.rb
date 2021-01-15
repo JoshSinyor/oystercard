@@ -7,7 +7,7 @@ describe Journey do
 
   describe 'initialize' do
     it 'initialises with a default #entry_station' do
-      expect(subject.entry_station).to eq Journey::DEFAULT_ENTRY_STATION
+      expect(subject.entry_station).to eq nil
     end
 
     it 'accepts a specified #entry_station' do

@@ -10,6 +10,7 @@ class Oystercard
   def initialize
     @balance = 0
     @journey = nil
+    # @journeylog = JourneyLog.new
     @journey_history = []
   end
 
@@ -22,11 +23,13 @@ class Oystercard
     touch_out(nil) if !@journey.nil?
     fail "Insufficient funds." if @balance < DEFAULT_MINIMUM_CARD_VALUE
     @journey = Journey.new(entry_station)
+    #@journeylog.start(entry_station)
   end
 
   def touch_out(exit_station)
     @journey = Journey.new if @journey.nil?
     @journey.finalize(exit_station)
+    #@journeylog.finish(exit_station)
     complete_journey
   end
 

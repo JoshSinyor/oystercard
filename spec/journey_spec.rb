@@ -33,14 +33,14 @@ describe Journey do
   end
 
   describe 'complete?' do
-    it 'can determine when a journey is not #complete?' do
+    it 'can determine when a journey is not complete?' do
       card = Oystercard.new
       card.top_up(Oystercard::DEFAULT_MAXIMUM_CARD_VALUE)
       card.touch_in(:entry_station)
-      expect(card.in_journey?).to eq true
+      expect(card.in_journey?).to eq false
     end
 
-    it 'can determine when a journey is #complete?' do
+    it 'can determine when a journey is complete?' do
       card = Oystercard.new
       card.top_up(Oystercard::DEFAULT_MAXIMUM_CARD_VALUE)
       card.touch_in(:entry_station)

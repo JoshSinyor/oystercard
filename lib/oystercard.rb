@@ -26,12 +26,12 @@ class Oystercard
 
   def touch_out(exit_station)
     @journey = Journey.new if @journey.nil?
-    @journey.touch_out(exit_station)
+    @journey.finalize(exit_station)
     complete_journey
   end
 
   def in_journey?
-    !@journey.nil?
+    @journey.nil?
   end
 
   private

@@ -24,6 +24,4 @@ def finish(exit_station)
   @journey.exit_station = exit_station
 end
 
-
-
 =end
